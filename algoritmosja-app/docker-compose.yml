@@ -1,0 +1,29 @@
+version: '3'
+services:
+  frontend:
+    build: .
+    ports:
+      - "3000:80"  # Mapea el puerto 80 del contenedor al puerto 3000 de tu máquina
+    networks:
+      - bank-network
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf  # Asegúrate de que nginx.conf está en la raíz del proyecto
+
+  db:
+    image: mysql:8.0  # Usa la versión de MySQL que prefieras
+    environment:
+      MYSQL_ROOT_PASSWORD: root  # Cambia esto a una contraseña segura
+      MYSQL_DATABASE: algoritmosjabank  # Nombre de la base de datos que quieres crear
+    ports:
+      - "3307:3306"  # Expone el puerto de MySQL
+    volumes:
+      - db_data:/var/lib/mysql  # Volumen para persistencia de datos
+    networks:
+      - bank-network
+
+networks:
+  bank-network:
+    driver: bridge
+
+volumes:
+  db_data:
